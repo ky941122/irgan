@@ -82,6 +82,7 @@ def read_ans(file_name, seq_len):
         if stdq not in ans:
             ans.append(stdq)
 
+    print "read alist done"
     return ans
 
 
@@ -108,11 +109,12 @@ def de_id(ids, id2tok):
     return line
 
 
-def inference(word_list, user_dict, train, ckpt_path, k=10, model_type="Dis"):
+def inference(word_list, user_dict, train, ckpt_path, k=30, model_type="Dis"):
     k = int(k)
     tokenizer = jieba.Tokenizer()
     tokenizer.load_userdict(user_dict)
     vocab, id2tok = build_vocab(word_list)   #vocab里token是unicode， id2tok里tok是str， 两个里面id都是int
+    print "read data"
     alist = read_ans(train, FLAGS.max_sequence_length)  #是个二维list
 
     with tf.Graph().as_default():
@@ -158,12 +160,14 @@ def inference(word_list, user_dict, train, ckpt_path, k=10, model_type="Dis"):
                 saver.restore(sess=sess, save_path=ckpt_path)
 
                 if model_type == "Dis":
+                    print "Test Dis Model!"
                     model = discriminator
                 else:
+                    print "Test Gen Model!"
                     model = generator
 
                 while True:
-                    print "Please input query:\n"
+                    print "Please input query:"
                     line = sys.stdin.readline().strip()
                     if not line:
                         line = "小米蓝牙手柄能连接手机玩吗"
