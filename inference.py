@@ -116,7 +116,7 @@ def inference(word_list, user_dict, train, ckpt_path, k=10, model_type="Dis"):
     alist = read_ans(train, FLAGS.max_sequence_length)  #是个二维list
 
     with tf.Graph().as_default():
-        with tf.device("/gpu:0"):
+        with tf.device("/cpu:0"):
             session_conf = tf.ConfigProto(allow_soft_placement=FLAGS.allow_soft_placement,
                                           log_device_placement=FLAGS.log_device_placement)
             sess = tf.Session(config=session_conf)
